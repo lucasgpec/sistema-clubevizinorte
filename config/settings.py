@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     # Nossos apps
-    'club',  # Linha adicionada
+    'club.apps.ClubConfig',  # Linha adicionada - Linha atualizada
 
      # Apps padrão do Django
     'django.contrib.admin',
@@ -119,6 +119,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = str(BASE_DIR / 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
