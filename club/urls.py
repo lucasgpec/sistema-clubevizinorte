@@ -3,6 +3,7 @@ from . import views
 from .views_admin import create_emergency_admin
 from .views_debug import debug_users, fix_user
 from .views_setup import setup_sistema
+from .views_status import status_sistema
 
 app_name = 'club'
 
@@ -11,6 +12,9 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
+    
+    # STATUS: Ver status do sistema
+    path('status/', status_sistema, name='status_sistema'),
     
     # SETUP COMPLETO: Configurar sistema do zero
     path('setup-sistema/', setup_sistema, name='setup_sistema'),
