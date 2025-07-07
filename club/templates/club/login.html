@@ -1,0 +1,55 @@
+{% extends 'club/base.html' %}
+
+{% block title %}Login - Sistema Clube Vizinho Norte{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-card">
+        <div class="logo-section">
+            <h1>
+                <i class="bi bi-building"></i>
+                Clube Vizinho Norte
+            </h1>
+            <p>Sistema de Gestão</p>
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label for="{{ form.username.id_for_label }}" class="form-label">
+                    <i class="bi bi-person"></i> {{ form.username.label }}
+                </label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <div class="text-danger small">{{ form.username.errors.0 }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="mb-4">
+                <label for="{{ form.password.id_for_label }}" class="form-label">
+                    <i class="bi bi-lock"></i> {{ form.password.label }}
+                </label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                    <div class="text-danger small">{{ form.password.errors.0 }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    Entrar
+                </button>
+            </div>
+        </form>
+        
+        <div class="text-center mt-3">
+            <small class="text-muted">
+                <i class="bi bi-info-circle"></i>
+                Entre com seu usuário e senha
+            </small>
+        </div>
+    </div>
+</div>
+{% endblock %}

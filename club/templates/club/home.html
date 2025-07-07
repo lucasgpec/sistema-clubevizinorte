@@ -1,0 +1,25 @@
+{% extends 'club/base.html' %}
+
+{% block title %}Bem-vindo - Sistema Clube Vizinho Norte{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-card">
+        <div class="logo-section">
+            <h1>
+                <i class="bi bi-building"></i>
+                Clube Vizinho Norte
+            </h1>
+            <p>Sistema de Gestão</p>
+        </div>
+        
+        <div class="text-center">
+            <p class="mb-4">Bem-vindo ao sistema de gestão do clube!</p>
+            <a href="{% url 'club:login' %}" class="btn btn-primary btn-lg">
+                <i class="bi bi-box-arrow-in-right"></i>
+                Fazer Login
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

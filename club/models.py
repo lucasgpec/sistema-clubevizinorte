@@ -1,8 +1,96 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
 from decimal import Decimal
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
+
+# — SISTEMA DE USUÁRIOS —
+
+class Usuario(AbstractUser):
+    """Sistema de usuários customizado para o clube"""
+    
+    TIPO_ADMINISTRADOR = 'ADMIN'
+    TIPO_GESTORA = 'GESTORA'
+    TIPO_FUNCIONARIO = 'FUNCIONARIO'
+    TIPO_CHOICES = [
+        (TIPO_ADMINISTRADOR, 'Administrador'),
+        (TIPO_GESTORA, 'Gestora'),
+        (TIPO_FUNCIONARIO, 'Funcionário'),
+    ]
+    
+    tipo_usuario = models.CharField(
+        max_length=11, 
+        choices=TIPO_CHOICES, 
+        default=TIPO_FUNCIONARIO
+    )
+    
+    # Controle de setores para funcionários
+    pode_gerenciar_socios = models.BooleanField(default=False)
+    pode_gerenciar_financeiro = models.BooleanField(default=False)
+    pode_gerenciar_locacoes = models.BooleanField(default=False)
+    pode_gerenciar_escolas = models.BooleanField(default=False)
+    pode_gerenciar_dayuse = models.BooleanField(default=False)
+    
+    # Dados pessoais
+    nome_completo = models.CharField(max_length=255)
+    cpf = models.CharField(max_length=14, unique=True, help_text="Formato: XXX.XXX.XXX-XX")
+    telefone = models.CharField(max_length=20, blank=True)
+    
+    # Controle de acesso
+    ativo = models.BooleanField(default=True)
+    criado_por = models.ForeignKey(
+        'self', 
+        on_delete=models.SET_NULL, 
+        null=True, blank=True,
+        related_name='usuarios_criados'
+    )
+    
+    data_criacao = models.DateTimeField(auto_now_add=True)
+    data_atualizacao = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"{self.nome_completo} ({self.get_tipo_usuario_display()})"
+    
+    class Meta:
+        verbose_name = "Usuário"
+        verbose_name_plural = "Usuários"
+
+
+class ConfiguracaoClube(models.Model):
+    """Configurações gerais do clube"""
+    nome_clube = models.CharField(max_length=200, default="Clube Vizinho Norte")
+    logo = models.ImageField(upload_to='logos/', null=True, blank=True)
+    descricao = models.TextField(blank=True)
+    
+    # Dados de contato
+    endereco = models.CharField(max_length=255, blank=True)
+    telefone = models.CharField(max_length=20, blank=True)
+    email = models.EmailField(blank=True)
+    site = models.URLField(blank=True)
+    
+    # Configurações de aparência
+    cor_primaria = models.CharField(max_length=7, default="#231f1e", help_text="Cor primária (hex)")
+    cor_secundaria = models.CharField(max_length=7, default="#304097", help_text="Cor secundária (hex)")
+    cor_terciaria = models.CharField(max_length=7, default="#3a9ed2", help_text="Cor terciária (hex)")
+    
+    ativa = models.BooleanField(default=True)
+    data_criacao = models.DateTimeField(auto_now_add=True)
+    data_atualizacao = models.DateTimeField(auto_now=True)
+    
+    def save(self, *args, **kwargs):
+        # Garante que só existe uma configuração ativa
+        if self.ativa:
+            ConfiguracaoClube.objects.filter(ativa=True).update(ativa=False)
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.nome_clube
+    
+    class Meta:
+        verbose_name = "Configuração do Clube"
+        verbose_name_plural = "Configurações do Clube"
+
 
 # — MODELO CENTRAL —
 

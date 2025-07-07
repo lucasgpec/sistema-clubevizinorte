@@ -5,11 +5,83 @@ from django import forms
 from django.contrib import messages
 
 from .models import (
-    Cliente, Socio, Dependente, Espaco, Locacao,
+    Usuario, ConfiguracaoClube, Cliente, Socio, Dependente, Espaco, Locacao,
     ContaBancaria, ConfiguracaoFinanceira, DayUse, Mensalidade,
     EscolaEsporte, MatriculaEscola, MensalidadeEscola, RepasseEscola,
     MensalidadeLocacao
 )
+
+# --- SISTEMA DE USUÁRIOS ---
+
+@admin.register(Usuario)
+class UsuarioAdmin(admin.ModelAdmin):
+    list_display = ('username', 'nome_completo', 'tipo_usuario', 'ativo', 'data_criacao')
+    list_filter = ('tipo_usuario', 'ativo', 'data_criacao')
+    search_fields = ('username', 'nome_completo', 'cpf', 'email')
+    readonly_fields = ('data_criacao', 'data_atualizacao', 'criado_por')
+    
+    fieldsets = (
+        ('Informações de Login', {
+            'fields': ('username', 'password', 'email')
+        }),
+        ('Dados Pessoais', {
+            'fields': ('nome_completo', 'cpf', 'telefone')
+        }),
+        ('Tipo de Usuário', {
+            'fields': ('tipo_usuario',)
+        }),
+        ('Permissões por Setor', {
+            'fields': ('pode_gerenciar_socios', 'pode_gerenciar_financeiro', 
+                      'pode_gerenciar_locacoes', 'pode_gerenciar_escolas', 
+                      'pode_gerenciar_dayuse'),
+            'classes': ('collapse',)
+        }),
+        ('Controle de Acesso', {
+            'fields': ('ativo', 'criado_por', 'data_criacao', 'data_atualizacao'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def get_readonly_fields(self, request, obj=None):
+        readonly = list(self.readonly_fields)
+        if obj:  # Editando usuário existente
+            readonly.append('tipo_usuario')
+        return readonly
+    
+    def save_model(self, request, obj, form, change):
+        if not change:  # Criando novo usuário
+            obj.criado_por = request.user
+        super().save_model(request, obj, form, change)
+
+
+@admin.register(ConfiguracaoClube)
+class ConfiguracaoClubeAdmin(admin.ModelAdmin):
+    list_display = ('nome_clube', 'ativa', 'data_atualizacao')
+    list_filter = ('ativa',)
+    readonly_fields = ('data_criacao', 'data_atualizacao')
+    
+    fieldsets = (
+        ('Informações Básicas', {
+            'fields': ('nome_clube', 'logo', 'descricao')
+        }),
+        ('Dados de Contato', {
+            'fields': ('endereco', 'telefone', 'email', 'site')
+        }),
+        ('Cores do Sistema', {
+            'fields': ('cor_primaria', 'cor_secundaria', 'cor_terciaria'),
+            'description': 'Cores baseadas na identidade visual do clube'
+        }),
+        ('Status', {
+            'fields': ('ativa', 'data_criacao', 'data_atualizacao')
+        }),
+    )
+    
+    def has_delete_permission(self, request, obj=None):
+        # Previne a exclusão da configuração ativa
+        if obj and obj.ativa:
+            return False
+        return super().has_delete_permission(request, obj)
+
 
 # --- ADMINS PRINCIPAIS ---
 

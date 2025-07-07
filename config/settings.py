@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-zhv*=h@gokr06g)w4%y)57be5xm*6!-^o9$13c6c&h7253kr5!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['sistema-clubevizinorte.onrender.com', 'localhost', '127.0.0.1']
 
@@ -106,9 +106,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+# Configuração do modelo de usuário customizado
+AUTH_USER_MODEL = 'club.Usuario'
 
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'pt-br'
+
+TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 
@@ -120,6 +123,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = str(BASE_DIR / 'staticfiles')
+
+# Media files (uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = str(BASE_DIR / 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

@@ -1,0 +1,167 @@
+{% extends 'club/base.html' %}
+
+{% block title %}Dashboard - Sistema Clube Vizinho Norte{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Cabeçalho -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h3 mb-0">
+                <i class="bi bi-speedometer2"></i>
+                Dashboard
+            </h1>
+            <p class="text-muted">Bem-vindo, {{ user.nome_completo }}!</p>
+        </div>
+    </div>
+    
+    <!-- Estatísticas -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="stats-number">{{ stats.total_socios }}</div>
+                <div class="stats-label">
+                    <i class="bi bi-person-badge"></i>
+                    Sócios Ativos
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="stats-number">{{ stats.total_clientes }}</div>
+                <div class="stats-label">
+                    <i class="bi bi-people"></i>
+                    Total Clientes
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="stats-number">{{ stats.mensalidades_pendentes }}</div>
+                <div class="stats-label">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    Mensalidades Pendentes
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="stats-number">{{ stats.locacoes_mes }}</div>
+                <div class="stats-label">
+                    <i class="bi bi-calendar-check"></i>
+                    Locações do Mês
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Informações do Usuário -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-person-circle"></i>
+                        Suas Informações
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <td><strong>Nome:</strong></td>
+                                <td>{{ user.nome_completo }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Usuário:</strong></td>
+                                <td>{{ user.username }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tipo:</strong></td>
+                                <td>
+                                    <span class="badge bg-primary">{{ user.get_tipo_usuario_display }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Email:</strong></td>
+                                <td>{{ user.email }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-shield-check"></i>
+                        Suas Permissões
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% if user.tipo_usuario == 'GESTORA' %}
+                            <div class="col-12">
+                                <div class="alert alert-info">
+                                    <i class="bi bi-star-fill"></i>
+                                    <strong>Gestora:</strong> Você tem acesso completo ao sistema!
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="col-12">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span>Gerenciar Sócios</span>
+                                        {% if user.pode_gerenciar_socios %}
+                                            <i class="bi bi-check-circle-fill text-success"></i>
+                                        {% else %}
+                                            <i class="bi bi-x-circle-fill text-danger"></i>
+                                        {% endif %}
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span>Gerenciar Financeiro</span>
+                                        {% if user.pode_gerenciar_financeiro %}
+                                            <i class="bi bi-check-circle-fill text-success"></i>
+                                        {% else %}
+                                            <i class="bi bi-x-circle-fill text-danger"></i>
+                                        {% endif %}
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span>Gerenciar Locações</span>
+                                        {% if user.pode_gerenciar_locacoes %}
+                                            <i class="bi bi-check-circle-fill text-success"></i>
+                                        {% else %}
+                                            <i class="bi bi-x-circle-fill text-danger"></i>
+                                        {% endif %}
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span>Gerenciar Escolas</span>
+                                        {% if user.pode_gerenciar_escolas %}
+                                            <i class="bi bi-check-circle-fill text-success"></i>
+                                        {% else %}
+                                            <i class="bi bi-x-circle-fill text-danger"></i>
+                                        {% endif %}
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span>Gerenciar Day Use</span>
+                                        {% if user.pode_gerenciar_dayuse %}
+                                            <i class="bi bi-check-circle-fill text-success"></i>
+                                        {% else %}
+                                            <i class="bi bi-x-circle-fill text-danger"></i>
+                                        {% endif %}
+                                    </li>
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

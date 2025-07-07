@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="login-container">
+    <h2>Login</h2>
+    {% if form.errors %}
+        <p style="color: red;">Usuário ou senha inválidos.</p>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            <label for="id_username">Usuário:</label>
+            {{ form.username }}
+        </div>
+        <div>
+            <label for="id_password">Senha:</label>
+            {{ form.password }}
+        </div>
+        <button type="submit">Entrar</button>
+    </form>
+</div>
+{% endblock %}
