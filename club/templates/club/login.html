@@ -6,9 +6,14 @@
 <div class="login-container">
     <div class="login-card">
         <div class="logo-section">
+            {% if config_clube.logo %}
+                <img src="{{ config_clube.logo.url }}" alt="Logo do Clube" style="max-height: 80px; margin-bottom: 20px;">
+            {% endif %}
             <h1>
-                <i class="bi bi-building"></i>
-                Clube Vizinho Norte
+                {% if not config_clube.logo %}
+                    <i class="bi bi-building"></i>
+                {% endif %}
+                {{ config_clube.nome_clube|default:"Clube Vizinho Norte" }}
             </h1>
             <p>Sistema de Gestão</p>
         </div>

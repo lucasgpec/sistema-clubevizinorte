@@ -70,12 +70,8 @@ def dashboard(request):
         ).count(),
     }
     
-    # Configuração do clube
-    config_clube = ConfiguracaoClube.objects.filter(ativa=True).first()
-    
     context = {
         'stats': stats,
-        'config_clube': config_clube,
         'user': user,
     }
     
