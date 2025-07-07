@@ -6,7 +6,10 @@ from django.db.models import Count, Sum
 from django.utils import timezone
 from datetime import datetime, timedelta
 from .models import *
-from .forms import UsuarioForm, LoginForm
+from .forms import (
+    UsuarioForm, LoginForm, ClienteForm, SocioForm, 
+    EspacoForm, LocacaoForm, EscolaEsporteForm, DayUseForm
+)
 
 
 def home(request):
@@ -163,6 +166,52 @@ def socios_list(request):
 
 
 @login_required
+def cliente_create(request):
+    """Criar novo cliente"""
+    if not request.user.pode_gerenciar_socios and request.user.tipo_usuario != 'GESTORA':
+        messages.error(request, 'Acesso negado.')
+        return redirect('club:dashboard')
+    
+    if request.method == 'POST':
+        form = ClienteForm(request.POST)
+        if form.is_valid():
+            cliente = form.save()
+            messages.success(request, f'Cliente "{cliente.nome_completo}" criado com sucesso!')
+            return redirect('club:socios_list')
+    else:
+        form = ClienteForm()
+    
+    return render(request, 'club/socios/cliente_form.html', {
+        'form': form, 
+        'title': 'Novo Cliente',
+        'subtitle': 'Cadastre um novo cliente no sistema'
+    })
+
+
+@login_required
+def socio_create(request):
+    """Criar novo sócio"""
+    if not request.user.pode_gerenciar_socios and request.user.tipo_usuario != 'GESTORA':
+        messages.error(request, 'Acesso negado.')
+        return redirect('club:dashboard')
+    
+    if request.method == 'POST':
+        form = SocioForm(request.POST)
+        if form.is_valid():
+            socio = form.save()
+            messages.success(request, f'Sócio "{socio.cliente.nome_completo}" criado com sucesso!')
+            return redirect('club:socios_list')
+    else:
+        form = SocioForm()
+    
+    return render(request, 'club/socios/socio_form.html', {
+        'form': form, 
+        'title': 'Novo Sócio',
+        'subtitle': 'Transforme um cliente em sócio'
+    })
+
+
+@login_required
 def financeiro_dashboard(request):
     """Dashboard financeiro"""
     if not request.user.pode_gerenciar_financeiro and request.user.tipo_usuario != 'GESTORA':
@@ -208,6 +257,52 @@ def locacoes_list(request):
 
 
 @login_required
+def locacao_create(request):
+    """Criar nova locação"""
+    if not request.user.pode_gerenciar_locacoes and request.user.tipo_usuario != 'GESTORA':
+        messages.error(request, 'Acesso negado.')
+        return redirect('club:dashboard')
+    
+    if request.method == 'POST':
+        form = LocacaoForm(request.POST)
+        if form.is_valid():
+            locacao = form.save()
+            messages.success(request, f'Locação criada com sucesso para {locacao.data_agendamento.strftime("%d/%m/%Y")}!')
+            return redirect('club:locacoes_list')
+    else:
+        form = LocacaoForm()
+    
+    return render(request, 'club/locacoes/form.html', {
+        'form': form, 
+        'title': 'Nova Locação',
+        'subtitle': 'Reserve um espaço do clube'
+    })
+
+
+@login_required
+def espaco_create(request):
+    """Criar novo espaço"""
+    if not request.user.pode_gerenciar_locacoes and request.user.tipo_usuario != 'GESTORA':
+        messages.error(request, 'Acesso negado.')
+        return redirect('club:dashboard')
+    
+    if request.method == 'POST':
+        form = EspacoForm(request.POST)
+        if form.is_valid():
+            espaco = form.save()
+            messages.success(request, f'Espaço "{espaco.nome}" criado com sucesso!')
+            return redirect('club:locacoes_list')
+    else:
+        form = EspacoForm()
+    
+    return render(request, 'club/locacoes/espaco_form.html', {
+        'form': form, 
+        'title': 'Novo Espaço',
+        'subtitle': 'Cadastre um novo espaço para locação'
+    })
+
+
+@login_required
 def escolas_list(request):
     """Lista de escolas de esporte"""
     if not request.user.pode_gerenciar_escolas and request.user.tipo_usuario != 'GESTORA':
@@ -220,6 +315,29 @@ def escolas_list(request):
 
 
 @login_required
+def escola_create(request):
+    """Criar nova escola de esporte"""
+    if not request.user.pode_gerenciar_escolas and request.user.tipo_usuario != 'GESTORA':
+        messages.error(request, 'Acesso negado.')
+        return redirect('club:dashboard')
+    
+    if request.method == 'POST':
+        form = EscolaEsporteForm(request.POST)
+        if form.is_valid():
+            escola = form.save()
+            messages.success(request, f'Escola "{escola.nome}" criada com sucesso!')
+            return redirect('club:escolas_list')
+    else:
+        form = EscolaEsporteForm()
+    
+    return render(request, 'club/escolas/form.html', {
+        'form': form, 
+        'title': 'Nova Escola de Esporte',
+        'subtitle': 'Cadastre uma nova escola parceira'
+    })
+
+
+@login_required
 def dayuse_list(request):
     """Lista de day uses"""
     if not request.user.pode_gerenciar_dayuse and request.user.tipo_usuario != 'GESTORA':
@@ -229,3 +347,30 @@ def dayuse_list(request):
     dayuses = DayUse.objects.select_related('cliente').all().order_by('-data_utilizacao')
     
     return render(request, 'club/dayuse/list.html', {'dayuses': dayuses})
+
+
+@login_required
+def dayuse_create(request):
+    """Criar novo day use"""
+    if not request.user.pode_gerenciar_dayuse and request.user.tipo_usuario != 'GESTORA':
+        messages.error(request, 'Acesso negado.')
+        return redirect('club:dashboard')
+    
+    if request.method == 'POST':
+        form = DayUseForm(request.POST)
+        if form.is_valid():
+            dayuse = form.save()
+            messages.success(request, f'Day Use criado com sucesso para {dayuse.cliente.nome_completo}!')
+            return redirect('club:dayuse_list')
+    else:
+        form = DayUseForm()
+        # Define valor padrão do day use
+        config = ConfiguracaoFinanceira.objects.filter(ativa=True).first()
+        if config:
+            form.initial['valor'] = config.valor_day_use
+    
+    return render(request, 'club/dayuse/form.html', {
+        'form': form, 
+        'title': 'Novo Day Use',
+        'subtitle': 'Registre um visitante de day use'
+    })

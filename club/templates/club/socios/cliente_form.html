@@ -1,0 +1,134 @@
+{% extends 'club/base.html' %}
+
+{% block title %}{{ title }} - Sistema Clube Vizinho Norte{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Cabeçalho -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h3 mb-0">
+                <i class="bi bi-person-plus"></i>
+                {{ title }}
+            </h1>
+            <p class="text-muted">{{ subtitle }}</p>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'club:socios_list' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i>
+                Voltar
+            </a>
+        </div>
+    </div>
+    
+    <!-- Formulário -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-person-fill"></i>
+                        Dados do Cliente
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <label for="{{ form.nome_completo.id_for_label }}" class="form-label">
+                                    <i class="bi bi-person"></i> {{ form.nome_completo.label }}
+                                </label>
+                                {{ form.nome_completo }}
+                                {% if form.nome_completo.errors %}
+                                    <div class="text-danger small">{{ form.nome_completo.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <label for="{{ form.cpf.id_for_label }}" class="form-label">
+                                    <i class="bi bi-card-text"></i> {{ form.cpf.label }}
+                                </label>
+                                {{ form.cpf }}
+                                {% if form.cpf.errors %}
+                                    <div class="text-danger small">{{ form.cpf.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="{{ form.data_nascimento.id_for_label }}" class="form-label">
+                                    <i class="bi bi-calendar"></i> {{ form.data_nascimento.label }}
+                                </label>
+                                {{ form.data_nascimento }}
+                                {% if form.data_nascimento.errors %}
+                                    <div class="text-danger small">{{ form.data_nascimento.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-5">
+                                <label for="{{ form.email.id_for_label }}" class="form-label">
+                                    <i class="bi bi-envelope"></i> {{ form.email.label }}
+                                </label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger small">{{ form.email.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3">
+                                <label for="{{ form.telefone.id_for_label }}" class="form-label">
+                                    <i class="bi bi-telephone"></i> {{ form.telefone.label }}
+                                </label>
+                                {{ form.telefone }}
+                                {% if form.telefone.errors %}
+                                    <div class="text-danger small">{{ form.telefone.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i>
+                                Salvar Cliente
+                            </button>
+                            <a href="{% url 'club:socios_list' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle"></i>
+                                Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Informações Laterais -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="bi bi-info-circle"></i>
+                        Informações
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <h6>Próximos Passos:</h6>
+                    <ol class="small">
+                        <li>Cadastre o cliente</li>
+                        <li>Transforme em sócio (opcional)</li>
+                        <li>Configure dependentes (se aplicável)</li>
+                    </ol>
+                    
+                    <hr>
+                    
+                    <h6>Tipos de Relacionamento:</h6>
+                    <ul class="list-unstyled small">
+                        <li><i class="bi bi-person"></i> <strong>Cliente:</strong> Pode usar day use e locar espaços</li>
+                        <li><i class="bi bi-person-badge"></i> <strong>Sócio:</strong> Acesso completo ao clube</li>
+                        <li><i class="bi bi-people"></i> <strong>Dependente:</strong> Vinculado a um sócio</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

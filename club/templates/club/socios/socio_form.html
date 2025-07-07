@@ -1,0 +1,154 @@
+{% extends 'club/base.html' %}
+
+{% block title %}{{ title }} - Sistema Clube Vizinho Norte{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Cabeçalho -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h3 mb-0">
+                <i class="bi bi-person-badge"></i>
+                {{ title }}
+            </h1>
+            <p class="text-muted">{{ subtitle }}</p>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'club:socios_list' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i>
+                Voltar
+            </a>
+        </div>
+    </div>
+    
+    <!-- Formulário -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-person-badge-fill"></i>
+                        Dados do Sócio
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label for="{{ form.cliente.id_for_label }}" class="form-label">
+                                    <i class="bi bi-person"></i> {{ form.cliente.label }}
+                                </label>
+                                {{ form.cliente }}
+                                {% if form.cliente.errors %}
+                                    <div class="text-danger small">{{ form.cliente.errors.0 }}</div>
+                                {% endif %}
+                                <small class="form-text text-muted">
+                                    Selecione um cliente que ainda não é sócio.
+                                </small>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.plano.id_for_label }}" class="form-label">
+                                    <i class="bi bi-credit-card"></i> {{ form.plano.label }}
+                                </label>
+                                {{ form.plano }}
+                                {% if form.plano.errors %}
+                                    <div class="text-danger small">{{ form.plano.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.status.id_for_label }}" class="form-label">
+                                    <i class="bi bi-toggle-on"></i> {{ form.status.label }}
+                                </label>
+                                {{ form.status }}
+                                {% if form.status.errors %}
+                                    <div class="text-danger small">{{ form.status.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.convites_mensais.id_for_label }}" class="form-label">
+                                    <i class="bi bi-ticket"></i> {{ form.convites_mensais.label }}
+                                </label>
+                                {{ form.convites_mensais }}
+                                {% if form.convites_mensais.errors %}
+                                    <div class="text-danger small">{{ form.convites_mensais.errors.0 }}</div>
+                                {% endif %}
+                                <small class="form-text text-muted">
+                                    Convites não acumulativos (padrão: 4)
+                                </small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="bi bi-cash"></i> Taxa de Adesão
+                                </label>
+                                <div class="form-check">
+                                    {{ form.taxa_adesao_paga }}
+                                    <label class="form-check-label" for="{{ form.taxa_adesao_paga.id_for_label }}">
+                                        Taxa de adesão de R$ 75,00 foi paga
+                                    </label>
+                                </div>
+                                {% if form.taxa_adesao_paga.errors %}
+                                    <div class="text-danger small">{{ form.taxa_adesao_paga.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i>
+                                Salvar Sócio
+                            </button>
+                            <a href="{% url 'club:socios_list' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle"></i>
+                                Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Informações Laterais -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="bi bi-info-circle"></i>
+                        Planos Disponíveis
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <h6>Individual - R$ 115,00</h6>
+                    <ul class="small mb-3">
+                        <li>Acesso individual ao clube</li>
+                        <li>4 convites mensais</li>
+                        <li>Uso de todas as instalações</li>
+                    </ul>
+                    
+                    <h6>Família - R$ 170,00</h6>
+                    <ul class="small mb-3">
+                        <li>Acesso para titular + dependentes</li>
+                        <li>4 convites mensais</li>
+                        <li>Cônjuge + filhos até 24 anos</li>
+                        <li>Filhos PcD sem limite de idade</li>
+                    </ul>
+                    
+                    <hr>
+                    
+                    <h6>Taxa de Adesão:</h6>
+                    <p class="small">
+                        <strong>R$ 75,00</strong> - Valor único pago na primeira vez que se torna sócio.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

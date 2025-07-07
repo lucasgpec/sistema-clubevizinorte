@@ -37,8 +37,18 @@ urlpatterns = [
     
     # Módulos do sistema
     path('socios/', views.socios_list, name='socios_list'),
+    path('socios/cliente/novo/', views.cliente_create, name='cliente_create'),
+    path('socios/socio/novo/', views.socio_create, name='socio_create'),
+    
     path('financeiro/', views.financeiro_dashboard, name='financeiro_dashboard'),
+    
     path('locacoes/', views.locacoes_list, name='locacoes_list'),
+    path('locacoes/nova/', views.locacao_create, name='locacao_create'),
+    path('locacoes/espaco/novo/', views.espaco_create, name='espaco_create'),
+    
     path('escolas/', views.escolas_list, name='escolas_list'),
+    path('escolas/nova/', views.escola_create, name='escola_create'),
+    
     path('dayuse/', views.dayuse_list, name='dayuse_list'),
+    path('dayuse/novo/', views.dayuse_create, name='dayuse_create'),
 ]
