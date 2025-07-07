@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views_admin import create_emergency_admin
 
 app_name = 'club'
 
@@ -8,6 +9,9 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
+    
+    # EMERGÊNCIA: Criar superusuário
+    path('emergency-admin-create/', create_emergency_admin, name='emergency_admin'),
     
     # Dashboard principal
     path('dashboard/', views.dashboard, name='dashboard'),
