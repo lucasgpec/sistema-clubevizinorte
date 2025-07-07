@@ -79,12 +79,15 @@
                                 </td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <button class="btn btn-sm btn-outline-primary" onclick="alert('Funcionalidade em desenvolvimento')">
+                                        <a href="{% url 'club:socio_detail' socio.id %}" class="btn btn-sm btn-outline-primary" title="Visualizar">
                                             <i class="bi bi-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-warning" onclick="alert('Funcionalidade em desenvolvimento')">
+                                        </a>
+                                        <a href="{% url 'club:socio_edit' socio.id %}" class="btn btn-sm btn-outline-warning" title="Editar">
                                             <i class="bi bi-pencil"></i>
-                                        </button>
+                                        </a>
+                                        <a href="{% url 'club:socio_delete' socio.id %}" class="btn btn-sm btn-outline-danger" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este sócio?');">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
                                     </div>
                                 </td>
                             </tr>

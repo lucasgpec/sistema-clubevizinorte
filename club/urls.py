@@ -42,7 +42,13 @@ urlpatterns = [
     # Módulos do sistema
     path('socios/', views.socios_list, name='socios_list'),
     path('socios/cliente/novo/', views.cliente_create, name='cliente_create'),
+    path('socios/cliente/<int:pk>/', views.cliente_detail, name='cliente_detail'),
+    path('socios/cliente/<int:pk>/editar/', views.cliente_edit, name='cliente_edit'),
+    path('socios/cliente/<int:pk>/excluir/', views.cliente_delete, name='cliente_delete'),
     path('socios/socio/novo/', views.socio_create, name='socio_create'),
+    path('socios/socio/<int:pk>/', views.socio_detail, name='socio_detail'),
+    path('socios/socio/<int:pk>/editar/', views.socio_edit, name='socio_edit'),
+    path('socios/socio/<int:pk>/excluir/', views.socio_delete, name='socio_delete'),
     
     path('financeiro/', views.financeiro_dashboard, name='financeiro_dashboard'),
     

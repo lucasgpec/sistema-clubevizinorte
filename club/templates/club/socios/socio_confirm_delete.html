@@ -1,0 +1,34 @@
+{% extends 'club/base.html' %}
+
+{% block title %}Excluir Sócio - Sistema Clube Vizinho Norte{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h3 mb-0">
+                <i class="bi bi-person-badge"></i>
+                Excluir Sócio
+            </h1>
+            <p class="text-muted">Confirme a exclusão do sócio abaixo.</p>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'club:socios_list' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Cancelar
+            </a>
+        </div>
+    </div>
+    <div class="alert alert-danger">
+        <strong>Atenção:</strong> Esta ação é irreversível! Tem certeza que deseja excluir o sócio <strong>{{ socio.cliente.nome_completo }}</strong>?
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">
+            <i class="bi bi-trash"></i> Confirmar Exclusão
+        </button>
+        <a href="{% url 'club:socios_list' %}" class="btn btn-outline-secondary ms-2">
+            Cancelar
+        </a>
+    </form>
+</div>
+{% endblock %}

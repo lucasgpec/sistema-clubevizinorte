@@ -153,6 +153,23 @@ class SocioAdmin(admin.ModelAdmin):
         }),
     )
 
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        if not change:
+            from .models import Mensalidade
+            from django.utils import timezone
+            mes_referencia = timezone.now().strftime('%Y-%m')
+            # Cria mensalidade apenas se não existir para o mês
+            if not Mensalidade.objects.filter(socio=obj, mes_referencia=mes_referencia).exists():
+                Mensalidade.objects.create(
+                    socio=obj,
+                    tipo='SOCIO',
+                    mes_referencia=mes_referencia,
+                    valor_original=obj.plano.valor if hasattr(obj.plano, 'valor') else 0,
+                    status='PENDENTE',
+                    data_vencimento=timezone.now().replace(day=10)  # Ajuste conforme regra do clube
+                )
+
 
 @admin.register(Dependente)
 class DependenteAdmin(admin.ModelAdmin):
@@ -326,7 +343,6 @@ class EscolaEsporteAdmin(admin.ModelAdmin):
 
 @admin.register(MatriculaEscola)
 class MatriculaEscolaAdmin(admin.ModelAdmin):
-    list_display = ('aluno', 'escola', 'valor_mensalidade', 'data_inicio', 'status')
     list_display = ('aluno', 'escola', 'valor_mensalidade', 'data_inicio', 'status')
     list_filter = ('status', 'escola', 'data_inicio')
     search_fields = ('aluno__nome_completo', 'escola__nome')
