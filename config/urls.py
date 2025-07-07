@@ -24,6 +24,14 @@ urlpatterns = [
     path('', include('club.urls')),
 ]
 
-# Servir arquivos de media em desenvolvimento
+# Servir arquivos de media em desenvolvimento e produção
+from django.views.static import serve
+from django.urls import re_path
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+else:
+    # Em produção, servir arquivos de media via Django (para Render)
+    urlpatterns += [
+        re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    ]

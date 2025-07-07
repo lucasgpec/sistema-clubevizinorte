@@ -4,6 +4,7 @@ from .views_admin import create_emergency_admin
 from .views_debug import debug_users, fix_user
 from .views_setup import setup_sistema
 from .views_status import status_sistema
+from .views_media import test_media
 
 app_name = 'club'
 
@@ -15,6 +16,9 @@ urlpatterns = [
     
     # STATUS: Ver status do sistema
     path('status/', status_sistema, name='status_sistema'),
+    
+    # TESTE: Testar arquivos de media
+    path('test-media/', test_media, name='test_media'),
     
     # SETUP COMPLETO: Configurar sistema do zero
     path('setup-sistema/', setup_sistema, name='setup_sistema'),

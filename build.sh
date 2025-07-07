@@ -8,6 +8,9 @@ pip install -r requirements.txt
 echo "Collecting static files..."
 python manage.py collectstatic --no-input
 
+echo "Creating media directory..."
+mkdir -p media/logos
+
 echo "Running migrations..."
 python manage.py migrate
 

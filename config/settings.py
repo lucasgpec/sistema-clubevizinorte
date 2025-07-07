@@ -133,6 +133,10 @@ MEDIA_ROOT = str(BASE_DIR / 'media')
 # WhiteNoise configuration for static files in production
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
+# Configuração para servir arquivos de media em produção
+WHITENOISE_USE_FINDERS = True
+WHITENOISE_AUTOREFRESH = True
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
