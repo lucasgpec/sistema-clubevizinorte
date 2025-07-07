@@ -1,0 +1,18 @@
+{% extends 'club/base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Detalhes do Cliente</h2>
+  <table class="table table-bordered">
+    <tr><th>Nome completo</th><td>{{ cliente.nome_completo }}</td></tr>
+    <tr><th>CPF</th><td>{{ cliente.cpf }}</td></tr>
+    <tr><th>Data de nascimento</th><td>{{ cliente.data_nascimento }}</td></tr>
+    <tr><th>Email</th><td>{{ cliente.email }}</td></tr>
+    <tr><th>Telefone</th><td>{{ cliente.telefone }}</td></tr>
+    <tr><th>Criado em</th><td>{{ cliente.data_criacao }}</td></tr>
+    <tr><th>Atualizado em</th><td>{{ cliente.data_atualizacao }}</td></tr>
+  </table>
+  <a href="{% url 'club:cliente_edit' cliente.pk %}" class="btn btn-primary">Editar</a>
+  <a href="{% url 'club:cliente_delete' cliente.pk %}" class="btn btn-danger">Excluir</a>
+  <a href="{% url 'club:socios_list' %}" class="btn btn-secondary">Voltar</a>
+</div>
+{% endblock %}

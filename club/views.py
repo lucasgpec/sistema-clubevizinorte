@@ -370,3 +370,57 @@ def dayuse_create(request):
         'title': 'Novo Day Use',
         'subtitle': 'Registre um visitante de day use'
     })
+
+
+@login_required
+def cliente_detail(request, pk):
+    """Detalhes do cliente"""
+    if not request.user.pode_gerenciar_socios and request.user.tipo_usuario != 'GESTORA':
+        messages.error(request, 'Acesso negado.')
+        return redirect('club:socios_list')
+    
+    cliente = get_object_or_404(Cliente, pk=pk)
+    
+    return render(request, 'club/socios/cliente_detail.html', {'cliente': cliente})
+
+
+@login_required
+def cliente_edit(request, pk):
+    """Editar cliente"""
+    if not request.user.pode_gerenciar_socios and request.user.tipo_usuario != 'GESTORA':
+        messages.error(request, 'Acesso negado.')
+        return redirect('club:socios_list')
+    
+    cliente = get_object_or_404(Cliente, pk=pk)
+    
+    if request.method == 'POST':
+        form = ClienteForm(request.POST, instance=cliente)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Cliente atualizado com sucesso!')
+            return redirect('club:socios_list')
+    else:
+        form = ClienteForm(instance=cliente)
+    
+    return render(request, 'club/socios/cliente_form.html', {
+        'form': form, 
+        'title': 'Editar Cliente',
+        'subtitle': 'Edite os dados do cliente'
+    })
+
+
+@login_required
+def cliente_delete(request, pk):
+    """Excluir cliente"""
+    if not request.user.pode_gerenciar_socios and request.user.tipo_usuario != 'GESTORA':
+        messages.error(request, 'Acesso negado.')
+        return redirect('club:socios_list')
+    
+    cliente = get_object_or_404(Cliente, pk=pk)
+    
+    if request.method == 'POST':
+        cliente.delete()
+        messages.success(request, 'Cliente excluído com sucesso!')
+        return redirect('club:socios_list')
+    
+    return render(request, 'club/socios/cliente_confirm_delete.html', {'cliente': cliente})
