@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from .views_admin import create_emergency_admin
+from .views_debug import debug_users, fix_user
 
 app_name = 'club'
 
@@ -12,6 +13,10 @@ urlpatterns = [
     
     # EMERGÊNCIA: Criar superusuário
     path('emergency-admin-create/', create_emergency_admin, name='emergency_admin'),
+    
+    # DEBUG: Ver e corrigir usuários
+    path('debug-users/', debug_users, name='debug_users'),
+    path('fix-user/', fix_user, name='fix_user'),
     
     # Dashboard principal
     path('dashboard/', views.dashboard, name='dashboard'),
