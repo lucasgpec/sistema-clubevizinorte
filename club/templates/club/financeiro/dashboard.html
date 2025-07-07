@@ -1,0 +1,112 @@
+{% extends 'club/base.html' %}
+
+{% block title %}Financeiro - Sistema Clube Vizinho Norte{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Cabeçalho -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h3 mb-0">
+                <i class="bi bi-currency-dollar"></i>
+                Dashboard Financeiro
+            </h1>
+            <p class="text-muted">Visão geral das finanças do clube</p>
+        </div>
+    </div>
+    
+    <!-- Estatísticas -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="stats-number">{{ stats.mensalidades_pendentes }}</div>
+                <div class="stats-label">
+                    <i class="bi bi-clock"></i>
+                    Mensalidades Pendentes
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="stats-number">{{ stats.mensalidades_vencidas }}</div>
+                <div class="stats-label">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    Mensalidades Vencidas
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="stats-number">R$ {{ stats.valor_pendente|floatformat:2 }}</div>
+                <div class="stats-label">
+                    <i class="bi bi-cash-stack"></i>
+                    Valor Pendente
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="stats-number">R$ {{ stats.receita_mes|floatformat:2 }}</div>
+                <div class="stats-label">
+                    <i class="bi bi-graph-up"></i>
+                    Receita do Mês
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Ações Rápidas -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-lightning"></i>
+                        Ações Rápidas
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-primary" onclick="alert('Funcionalidade em desenvolvimento')">
+                            <i class="bi bi-plus-circle"></i>
+                            Gerar Mensalidades
+                        </button>
+                        <button class="btn btn-outline-success" onclick="alert('Funcionalidade em desenvolvimento')">
+                            <i class="bi bi-check-circle"></i>
+                            Registrar Pagamento
+                        </button>
+                        <button class="btn btn-outline-info" onclick="alert('Funcionalidade em desenvolvimento')">
+                            <i class="bi bi-file-earmark-pdf"></i>
+                            Relatório Financeiro
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-info-circle"></i>
+                        Informações
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Dia de Vencimento:</strong> Todo dia 10</p>
+                    <p><strong>Tolerância:</strong> 5 dias</p>
+                    <p><strong>Multa:</strong> 2% sobre o valor</p>
+                    <p><strong>Juros:</strong> 0.033% ao dia</p>
+                    <hr>
+                    <small class="text-muted">
+                        Configure estes valores no admin do sistema.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

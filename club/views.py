@@ -153,7 +153,7 @@ def usuario_toggle(request, pk):
 @login_required
 def socios_list(request):
     """Lista de sócios"""
-    if not request.user.pode_gerenciar_socios:
+    if not request.user.pode_gerenciar_socios and request.user.tipo_usuario != 'GESTORA':
         messages.error(request, 'Acesso negado.')
         return redirect('club:dashboard')
     
@@ -165,23 +165,32 @@ def socios_list(request):
 @login_required
 def financeiro_dashboard(request):
     """Dashboard financeiro"""
-    if not request.user.pode_gerenciar_financeiro:
+    if not request.user.pode_gerenciar_financeiro and request.user.tipo_usuario != 'GESTORA':
         messages.error(request, 'Acesso negado.')
         return redirect('club:dashboard')
     
-    # Estatísticas financeiras
-    stats = {
-        'mensalidades_pendentes': Mensalidade.objects.filter(status='PENDENTE').count(),
-        'mensalidades_vencidas': Mensalidade.objects.filter(status='VENCIDO').count(),
-        'valor_pendente': Mensalidade.objects.filter(status='PENDENTE').aggregate(
-            total=Sum('valor_total')
-        )['total'] or 0,
-        'receita_mes': Mensalidade.objects.filter(
-            status='PAGO',
-            data_pagamento__month=datetime.now().month,
-            data_pagamento__year=datetime.now().year
-        ).aggregate(total=Sum('valor_pago'))['total'] or 0,
-    }
+    # Estatísticas financeiras com tratamento de erro
+    try:
+        stats = {
+            'mensalidades_pendentes': Mensalidade.objects.filter(status='PENDENTE').count(),
+            'mensalidades_vencidas': Mensalidade.objects.filter(status='VENCIDO').count(),
+            'valor_pendente': Mensalidade.objects.filter(status='PENDENTE').aggregate(
+                total=Sum('valor_total')
+            )['total'] or 0,
+            'receita_mes': Mensalidade.objects.filter(
+                status='PAGO',
+                data_pagamento__month=datetime.now().month,
+                data_pagamento__year=datetime.now().year
+            ).aggregate(total=Sum('valor_pago'))['total'] or 0,
+        }
+    except:
+        # Se houver erro nas consultas, usar valores padrão
+        stats = {
+            'mensalidades_pendentes': 0,
+            'mensalidades_vencidas': 0,
+            'valor_pendente': 0,
+            'receita_mes': 0,
+        }
     
     return render(request, 'club/financeiro/dashboard.html', {'stats': stats})
 
@@ -189,7 +198,7 @@ def financeiro_dashboard(request):
 @login_required
 def locacoes_list(request):
     """Lista de locações"""
-    if not request.user.pode_gerenciar_locacoes:
+    if not request.user.pode_gerenciar_locacoes and request.user.tipo_usuario != 'GESTORA':
         messages.error(request, 'Acesso negado.')
         return redirect('club:dashboard')
     
@@ -201,7 +210,7 @@ def locacoes_list(request):
 @login_required
 def escolas_list(request):
     """Lista de escolas de esporte"""
-    if not request.user.pode_gerenciar_escolas:
+    if not request.user.pode_gerenciar_escolas and request.user.tipo_usuario != 'GESTORA':
         messages.error(request, 'Acesso negado.')
         return redirect('club:dashboard')
     
@@ -213,7 +222,7 @@ def escolas_list(request):
 @login_required
 def dayuse_list(request):
     """Lista de day uses"""
-    if not request.user.pode_gerenciar_dayuse:
+    if not request.user.pode_gerenciar_dayuse and request.user.tipo_usuario != 'GESTORA':
         messages.error(request, 'Acesso negado.')
         return redirect('club:dashboard')
     

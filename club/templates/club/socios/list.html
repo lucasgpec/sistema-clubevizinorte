@@ -1,0 +1,99 @@
+{% extends 'club/base.html' %}
+
+{% block title %}Sócios - Sistema Clube Vizinho Norte{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Cabeçalho -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h3 mb-0">
+                <i class="bi bi-person-badge"></i>
+                Gestão de Sócios
+            </h1>
+            <p class="text-muted">Gerencie os sócios do clube</p>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-primary" onclick="alert('Funcionalidade em desenvolvimento')">
+                <i class="bi bi-plus-circle"></i>
+                Novo Sócio
+            </button>
+        </div>
+    </div>
+    
+    <!-- Lista de Sócios -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="bi bi-list"></i>
+                Lista de Sócios
+            </h5>
+        </div>
+        <div class="card-body">
+            {% if socios %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>CPF</th>
+                                <th>Plano</th>
+                                <th>Status</th>
+                                <th>Taxa Adesão</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for socio in socios %}
+                            <tr>
+                                <td>
+                                    <strong>{{ socio.cliente.nome_completo }}</strong>
+                                    <br>
+                                    <small class="text-muted">{{ socio.cliente.email }}</small>
+                                </td>
+                                <td>{{ socio.cliente.cpf }}</td>
+                                <td>
+                                    <span class="badge bg-info">{{ socio.get_plano_display }}</span>
+                                </td>
+                                <td>
+                                    {% if socio.status == 'ATIVO' %}
+                                        <span class="badge bg-success">{{ socio.get_status_display }}</span>
+                                    {% elif socio.status == 'PENDENTE' %}
+                                        <span class="badge bg-warning">{{ socio.get_status_display }}</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">{{ socio.get_status_display }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if socio.taxa_adesao_paga %}
+                                        <span class="badge bg-success">Paga</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Pendente</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <button class="btn btn-sm btn-outline-primary" onclick="alert('Funcionalidade em desenvolvimento')">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-warning" onclick="alert('Funcionalidade em desenvolvimento')">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-person-plus display-4 text-muted"></i>
+                    <h5 class="mt-3">Nenhum sócio encontrado</h5>
+                    <p class="text-muted">Clique em "Novo Sócio" para adicionar o primeiro sócio.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

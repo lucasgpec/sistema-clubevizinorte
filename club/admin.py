@@ -327,6 +327,7 @@ class EscolaEsporteAdmin(admin.ModelAdmin):
 @admin.register(MatriculaEscola)
 class MatriculaEscolaAdmin(admin.ModelAdmin):
     list_display = ('aluno', 'escola', 'valor_mensalidade', 'data_inicio', 'status')
+    list_display = ('aluno', 'escola', 'valor_mensalidade', 'data_inicio', 'status')
     list_filter = ('status', 'escola', 'data_inicio')
     search_fields = ('aluno__nome_completo', 'escola__nome')
     readonly_fields = ('data_criacao', 'data_atualizacao')

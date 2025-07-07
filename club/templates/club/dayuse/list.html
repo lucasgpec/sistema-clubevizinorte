@@ -1,0 +1,97 @@
+{% extends 'club/base.html' %}
+
+{% block title %}Day Use - Sistema Clube Vizinho Norte{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Cabeçalho -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h3 mb-0">
+                <i class="bi bi-sun"></i>
+                Gestão de Day Use
+            </h1>
+            <p class="text-muted">Gerencie os visitantes de day use</p>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-primary" onclick="alert('Funcionalidade em desenvolvimento')">
+                <i class="bi bi-plus-circle"></i>
+                Novo Day Use
+            </button>
+        </div>
+    </div>
+    
+    <!-- Lista de Day Uses -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="bi bi-list"></i>
+                Lista de Day Uses
+            </h5>
+        </div>
+        <div class="card-body">
+            {% if dayuses %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Data Utilização</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                                <th>Pagamento</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for dayuse in dayuses %}
+                            <tr>
+                                <td>
+                                    <strong>{{ dayuse.cliente.nome_completo }}</strong>
+                                    <br>
+                                    <small class="text-muted">{{ dayuse.cliente.email }}</small>
+                                </td>
+                                <td>{{ dayuse.data_utilizacao|date:"d/m/Y" }}</td>
+                                <td>R$ {{ dayuse.valor|floatformat:2 }}</td>
+                                <td>
+                                    {% if dayuse.pago %}
+                                        <span class="badge bg-success">Pago</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">Pendente</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if dayuse.data_pagamento %}
+                                        {{ dayuse.data_pagamento|date:"d/m/Y" }}
+                                        <br>
+                                        <small class="text-muted">{{ dayuse.forma_pagamento|default:"N/A" }}</small>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <button class="btn btn-sm btn-outline-primary" onclick="alert('Funcionalidade em desenvolvimento')">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-warning" onclick="alert('Funcionalidade em desenvolvimento')">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-sun display-4 text-muted"></i>
+                    <h5 class="mt-3">Nenhum day use encontrado</h5>
+                    <p class="text-muted">Clique em "Novo Day Use" para registrar o primeiro visitante.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
