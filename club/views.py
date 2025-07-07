@@ -10,6 +10,7 @@ from .forms import (
     UsuarioForm, LoginForm, ClienteForm, SocioForm, 
     EspacoForm, LocacaoForm, EscolaEsporteForm, DayUseForm
 )
+from .views_socios_detail_edit import socio_detail, socio_edit, socio_delete
 
 
 def home(request):
