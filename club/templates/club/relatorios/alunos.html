@@ -1,0 +1,61 @@
+{% extends 'club/base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Relatório de Alunos</h2>
+  <a href="{% url 'exportar_alunos_csv' %}" class="btn btn-outline-success mb-3">Exportar CSV</a>
+  <form method="get" class="row g-3 mb-3">
+    <div class="col-md-3">
+      <label>Escola</label>
+      <select name="escola" class="form-control">
+        <option value="">Todas</option>
+        {% for escola in escolas %}
+        <option value="{{ escola.pk }}" {% if escola_selected == escola.pk|stringformat:'s' %}selected{% endif %}>{{ escola.nome }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label>Esporte</label>
+      <select name="esporte" class="form-control">
+        <option value="">Todos</option>
+        {% for esporte in esportes %}
+        <option value="{{ esporte.pk }}" {% if esporte_selected == esporte.pk|stringformat:'s' %}selected{% endif %}>{{ esporte.nome }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label>Status</label>
+      <select name="status" class="form-control">
+        <option value="">Todos</option>
+        <option value="ALUNO" {% if status_selected == 'ALUNO' %}selected{% endif %}>Aluno</option>
+        <option value="SOCIO" {% if status_selected == 'SOCIO' %}selected{% endif %}>Sócio</option>
+        <option value="ALUNO_SOCIO" {% if status_selected == 'ALUNO_SOCIO' %}selected{% endif %}>Aluno/Sócio</option>
+      </select>
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+      <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+    </div>
+  </form>
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Escola</th>
+        <th>Status</th>
+        <th>Esportes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for aluno in alunos %}
+      <tr>
+        <td>{{ aluno.nome }}</td>
+        <td>{{ aluno.escola.nome }}</td>
+        <td>{{ aluno.get_status_display }}</td>
+        <td>{% for h in aluno.horarios.all %}{{ h.esporte.nome }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4">Nenhum aluno encontrado.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

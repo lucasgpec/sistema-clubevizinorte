@@ -1,0 +1,27 @@
+{% extends 'club/base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2><i class="bi bi-trophy"></i> {{ title }}</h2>
+  <form method="post" class="card p-4 shadow-sm">
+    {% csrf_token %}
+    <div class="mb-3">
+      {{ form.nome.label_tag }}
+      {{ form.nome|add_class:'form-control' }}
+    </div>
+    <div class="mb-3">
+      {{ form.tipo.label_tag }}
+      {{ form.tipo|add_class:'form-control' }}
+    </div>
+    <div class="mb-3">
+      {{ form.logo.label_tag }}
+      {{ form.logo|add_class:'form-control' }}
+    </div>
+    <button type="submit" class="btn btn-success">
+      <i class="bi bi-save"></i> Salvar
+    </button>
+    <a href="{% url 'club:esportes_list' %}" class="btn btn-secondary">
+      <i class="bi bi-x-circle"></i> Cancelar
+    </a>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'club/base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Alunos da Escola: {{ escola.nome }}</h2>
+  <a href="{% url 'club:aluno_escola_create' escola.pk %}" class="btn btn-success mb-3">Novo Aluno</a>
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Foto</th>
+        <th>Nome</th>
+        <th>Status</th>
+        <th>Sócio</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for aluno in alunos %}
+      <tr>
+        <td>{% if aluno.foto %}<img src="{{ aluno.foto.url }}" width="60">{% endif %}</td>
+        <td>{{ aluno.nome }}</td>
+        <td>{{ aluno.get_status_display }}</td>
+        <td>{% if aluno.socio %}Sim{% else %}Não{% endif %}</td>
+        <td>
+          <a href="{% url 'club:aluno_escola_edit' escola.pk aluno.pk %}" class="btn btn-primary btn-sm">Editar</a>
+          <a href="{% url 'club:aluno_escola_delete' escola.pk aluno.pk %}" class="btn btn-danger btn-sm">Excluir</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5">Nenhum aluno cadastrado.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="{% url 'club:escolas_list' %}" class="btn btn-secondary">Voltar para Escolas</a>
+</div>
+{% endblock %}

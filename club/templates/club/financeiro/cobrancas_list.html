@@ -1,0 +1,44 @@
+{% extends 'club/base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Painel de Cobranças</h2>
+  <a href="{% url 'club:cobranca_create' %}" class="btn btn-primary mb-3">
+    <i class="bi bi-plus-circle"></i> Nova Cobrança
+  </a>
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Aluno</th>
+        <th>Valor</th>
+        <th>Vencimento</th>
+        <th>Status</th>
+        <th>Emissão</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cobranca in cobrancas %}
+      <tr>
+        <td>{{ cobranca.id }}</td>
+        <td>{{ cobranca.aluno.nome }}</td>
+        <td>R$ {{ cobranca.valor|floatformat:2 }}</td>
+        <td>{{ cobranca.vencimento|date:'d/m/Y' }}</td>
+        <td>
+          <span class="badge bg-{% if cobranca.status == 'PAGO' %}success{% elif cobranca.status == 'PENDENTE' %}warning{% else %}secondary{% endif %}">
+            {{ cobranca.get_status_display }}
+          </span>
+        </td>
+        <td>{{ cobranca.data_emissao|date:'d/m/Y H:i' }}</td>
+        <td>
+          <a href="{% url 'club:cobranca_detail' cobranca.id %}" class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></a>
+          <a href="{% url 'club:cobranca_emitir' cobranca.id %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-cash-coin"></i> Emitir</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7" class="text-center">Nenhuma cobrança encontrada.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'club/base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Relatório de Cobranças</h2>
+  <form method="get" class="row g-3 mb-3">
+    <div class="col-md-3">
+      <label class="form-label">Status</label>
+      <select name="status" class="form-select">
+        <option value="">Todos</option>
+        <option value="PENDENTE" {% if request.GET.status == 'PENDENTE' %}selected{% endif %}>Pendente</option>
+        <option value="PAGO" {% if request.GET.status == 'PAGO' %}selected{% endif %}>Pago</option>
+        <option value="CANCELADO" {% if request.GET.status == 'CANCELADO' %}selected{% endif %}>Cancelado</option>
+        <option value="ERRO" {% if request.GET.status == 'ERRO' %}selected{% endif %}>Erro</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Aluno</label>
+      <input type="text" name="aluno" class="form-control" value="{{ request.GET.aluno }}" placeholder="Nome do aluno">
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Período</label>
+      <input type="date" name="inicio" class="form-control mb-1" value="{{ request.GET.inicio }}">
+      <input type="date" name="fim" class="form-control" value="{{ request.GET.fim }}">
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+      <button type="submit" class="btn btn-primary w-100"><i class="bi bi-funnel"></i> Filtrar</button>
+    </div>
+  </form>
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Aluno</th>
+        <th>Valor</th>
+        <th>Vencimento</th>
+        <th>Status</th>
+        <th>Emissão</th>
+        <th>Baixa</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cobranca in cobrancas %}
+      <tr>
+        <td>{{ cobranca.id }}</td>
+        <td>{{ cobranca.aluno.nome }}</td>
+        <td>R$ {{ cobranca.valor|floatformat:2 }}</td>
+        <td>{{ cobranca.vencimento|date:'d/m/Y' }}</td>
+        <td><span class="badge bg-{% if cobranca.status == 'PAGO' %}success{% elif cobranca.status == 'PENDENTE' %}warning{% else %}secondary{% endif %}">{{ cobranca.get_status_display }}</span></td>
+        <td>{{ cobranca.data_emissao|date:'d/m/Y H:i' }}</td>
+        <td>{% if cobranca.data_baixa %}{{ cobranca.data_baixa|date:'d/m/Y H:i' }}{% else %}-{% endif %}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7" class="text-center">Nenhuma cobrança encontrada.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

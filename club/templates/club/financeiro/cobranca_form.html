@@ -1,0 +1,15 @@
+{% extends 'club/base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Nova Cobrança</h2>
+  <form method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">
+      <i class="bi bi-cash-coin"></i> Salvar Cobrança
+    </button>
+    <a href="{% url 'club:cobrancas_list' %}" class="btn btn-secondary">
+      <i class="bi bi-x-circle"></i> Cancelar
+    </a>
+  </form>
+</div>
+{% endblock %}

@@ -123,7 +123,8 @@ class LocacaoForm(forms.ModelForm):
     
     class Meta:
         model = Locacao
-        fields = ['cliente', 'espaco', 'data_agendamento', 'status']
+        fields = ['cliente', 'espaco', 'data_agendamento', 'status'
+        ]
         widgets = {
             'cliente': forms.Select(attrs={'class': 'form-control'}),
             'espaco': forms.Select(attrs={'class': 'form-control'}),
@@ -162,7 +163,8 @@ class DayUseForm(forms.ModelForm):
     
     class Meta:
         model = DayUse
-        fields = ['cliente', 'data_utilizacao', 'valor', 'pago', 'data_pagamento', 'forma_pagamento', 'observacoes']
+        fields = ['cliente', 'data_utilizacao', 'valor', 'pago', 'data_pagamento', 'forma_pagamento', 'observacoes'
+        ]
         widgets = {
             'cliente': forms.Select(attrs={'class': 'form-control'}),
             'data_utilizacao': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
@@ -179,3 +181,91 @@ class DayUseForm(forms.ModelForm):
         self.fields['data_pagamento'].required = False
         self.fields['forma_pagamento'].required = False
         self.fields['observacoes'].required = False
+
+
+class EsporteForm(forms.ModelForm):
+    """Formulário para esportes"""
+    
+    class Meta:
+        model = Esporte
+        fields = ['nome', 'descricao', 'logo', 'tipo']
+        widgets = {
+            'nome': forms.TextInput(attrs={'class': 'form-control'}),
+            'descricao': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'logo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'tipo': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+
+class EscolaForm(forms.ModelForm):
+    """Formulário para escolas"""
+    
+    class Meta:
+        model = Escola
+        fields = ['nome', 'tipo', 'logo', 'responsavel']
+        widgets = {
+            'nome': forms.TextInput(attrs={'class': 'form-control'}),
+            'tipo': forms.TextInput(attrs={'class': 'form-control'}),
+            'logo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'responsavel': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+
+class AlunoEscolaForm(forms.ModelForm):
+    """Formulário para alunos de escola"""
+    
+    class Meta:
+        model = AlunoEscola
+        fields = ['nome', 'foto', 'escola', 'socio', 'status']
+        widgets = {
+            'nome': forms.TextInput(attrs={'class': 'form-control'}),
+            'foto': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'escola': forms.Select(attrs={'class': 'form-control'}),
+            'socio': forms.Select(attrs={'class': 'form-control'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+
+class HorarioEsporteForm(forms.ModelForm):
+    """Formulário para horários de esporte"""
+    
+    class Meta:
+        model = HorarioEsporte
+        fields = ['aluno', 'esporte', 'dia_semana', 'horario', 'valor_mensalidade']
+        widgets = {
+            'aluno': forms.Select(attrs={'class': 'form-control'}),
+            'esporte': forms.Select(attrs={'class': 'form-control'}),
+            'dia_semana': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Segunda-feira'}),
+            'horario': forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
+            'valor_mensalidade': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+        }
+
+
+class FinanceiroEscolaForm(forms.ModelForm):
+    """Formulário para financeiro de escola"""
+    
+    class Meta:
+        model = FinanceiroEscola
+        fields = ['escola', 'aluno', 'esporte', 'valor_pago', 'data_pagamento', 'observacao']
+        widgets = {
+            'escola': forms.Select(attrs={'class': 'form-control'}),
+            'aluno': forms.Select(attrs={'class': 'form-control'}),
+            'esporte': forms.Select(attrs={'class': 'form-control'}),
+            'valor_pago': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'data_pagamento': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'observacao': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+        }
+
+
+class CobrancaForm(forms.ModelForm):
+    """Formulário para criação e edição de cobranças"""
+    
+    class Meta:
+        model = Cobranca
+        fields = ['aluno', 'valor', 'vencimento', 'observacao']
+        widgets = {
+            'aluno': forms.Select(attrs={'class': 'form-select'}),
+            'valor': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'vencimento': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'observacao': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+        }

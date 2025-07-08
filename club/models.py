@@ -685,3 +685,114 @@ class MensalidadeLocacao(models.Model):
         verbose_name = "Mensalidade de Locação"
         verbose_name_plural = "Mensalidades de Locações"
         ordering = ["-data_vencimento"]
+
+
+class Esporte(models.Model):
+    nome = models.CharField(max_length=100)
+    descricao = models.TextField(blank=True)
+    def __str__(self):
+        return self.nome
+    class Meta:
+        verbose_name = 'Esporte'
+        verbose_name_plural = 'Esportes'
+
+
+class Escola(models.Model):
+    nome = models.CharField(max_length=255)
+    tipo = models.CharField(max_length=100)
+    logo = models.ImageField(upload_to='escolas/logos/', null=True, blank=True)
+    responsavel = models.ForeignKey('Usuario', on_delete=models.SET_NULL, null=True, blank=True, related_name='escolas_responsavel')
+    def __str__(self):
+        return self.nome
+    class Meta:
+        verbose_name = 'Escola'
+        verbose_name_plural = 'Escolas'
+
+
+class AlunoEscola(models.Model):
+    nome = models.CharField(max_length=255)
+    foto = models.ImageField(upload_to='alunos/fotos/', null=True, blank=True)
+    escola = models.ForeignKey(Escola, on_delete=models.CASCADE, related_name='alunos')
+    esportes = models.ManyToManyField(Esporte, through='HorarioEsporte', related_name='alunos')
+    socio = models.ForeignKey('Socio', on_delete=models.SET_NULL, null=True, blank=True, related_name='alunos_escola')
+    status = models.CharField(max_length=20, choices=[('ALUNO','Aluno'),('SOCIO','Sócio'),('ALUNO_SOCIO','Aluno/Sócio')], default='ALUNO')
+    data_cadastro = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.nome
+    class Meta:
+        verbose_name = 'Aluno de Escola'
+        verbose_name_plural = 'Alunos de Escola'
+
+
+class HorarioEsporte(models.Model):
+    aluno = models.ForeignKey(AlunoEscola, on_delete=models.CASCADE, related_name='horarios')
+    esporte = models.ForeignKey(Esporte, on_delete=models.CASCADE, related_name='horarios')
+    dia_semana = models.CharField(max_length=20)
+    horario = models.TimeField()
+    valor_mensalidade = models.DecimalField(max_digits=8, decimal_places=2)
+    def __str__(self):
+        return f"{self.aluno.nome} - {self.esporte.nome} ({self.dia_semana} {self.horario})"
+    class Meta:
+        verbose_name = 'Horário de Esporte'
+        verbose_name_plural = 'Horários de Esporte'
+
+
+class FinanceiroEscola(models.Model):
+    escola = models.ForeignKey(Escola, on_delete=models.CASCADE, related_name='financeiro')
+    aluno = models.ForeignKey(AlunoEscola, on_delete=models.CASCADE, related_name='pagamentos')
+    esporte = models.ForeignKey(Esporte, on_delete=models.CASCADE, related_name='pagamentos')
+    valor_pago = models.DecimalField(max_digits=8, decimal_places=2)
+    data_pagamento = models.DateField()
+    observacao = models.TextField(blank=True)
+    def __str__(self):
+        return f"{self.aluno.nome} - {self.escola.nome} - {self.valor_pago}"
+    class Meta:
+        verbose_name = 'Financeiro da Escola'
+        verbose_name_plural = 'Financeiro das Escolas'
+
+
+# --- COBRANÇAS E INTEGRAÇÃO FINANCEIRA ---
+
+class Cobranca(models.Model):
+    STATUS_CHOICES = [
+        ('PENDENTE', 'Pendente'),
+        ('PAGO', 'Pago'),
+        ('CANCELADO', 'Cancelado'),
+        ('ERRO', 'Erro'),
+    ]
+    aluno = models.ForeignKey(AlunoEscola, on_delete=models.CASCADE, related_name='cobrancas')
+    valor = models.DecimalField(max_digits=8, decimal_places=2)
+    vencimento = models.DateField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDENTE')
+    linha_digitavel = models.CharField(max_length=255, blank=True)
+    nosso_numero = models.CharField(max_length=50, blank=True)
+    codigo_barras = models.CharField(max_length=255, blank=True)
+    data_emissao = models.DateTimeField(auto_now_add=True)
+    data_baixa = models.DateTimeField(null=True, blank=True)
+    observacao = models.TextField(blank=True)
+    retorno_banco = models.TextField(blank=True)
+    def __str__(self):
+        return f"Cobranca {self.id} - {self.aluno.nome} - {self.valor} ({self.status})"
+    class Meta:
+        verbose_name = 'Cobrança'
+        verbose_name_plural = 'Cobranças'
+
+class ConfiguracaoIntegracaoFinanceira(models.Model):
+    BANCO_CHOICES = [
+        ('GERENCIANET', 'Gerencianet'),
+        ('ASAAS', 'Asaas'),
+        ('OUTRO', 'Outro'),
+    ]
+    banco = models.CharField(max_length=30, choices=BANCO_CHOICES, default='GERENCIANET')
+    client_id = models.CharField(max_length=255)
+    client_secret = models.CharField(max_length=255)
+    webhook_url = models.URLField(blank=True)
+    ambiente = models.CharField(max_length=20, choices=[('PRODUCAO','Produção'),('HOMOLOGACAO','Homologação')], default='HOMOLOGACAO')
+    ativo = models.BooleanField(default=True)
+    data_criacao = models.DateTimeField(auto_now_add=True)
+    data_atualizacao = models.DateTimeField(auto_now=True)
+    def __str__(self):
+        return f"{self.get_banco_display()} ({'Ativo' if self.ativo else 'Inativo'})"
+    class Meta:
+        verbose_name = 'Configuração Integração Financeira'
+        verbose_name_plural = 'Configurações Integração Financeira'

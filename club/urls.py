@@ -5,6 +5,15 @@ from .views_debug import debug_users, fix_user
 from .views_setup import setup_sistema
 from .views_status import status_sistema
 from .views_media import test_media
+from .views_escolas import escolas_list, escola_create, escola_edit, escola_delete
+from .views_alunos_escola import alunos_escola_list, aluno_escola_create, aluno_escola_edit, aluno_escola_delete
+from .views_esportes import esportes_list, esporte_create, esporte_edit, esporte_delete
+from .views_horarios_esporte import horarios_aluno_list, horario_create, horario_edit, horario_delete
+from .views_financeiro_escola import financeiro_escola_list, financeiro_escola_create, financeiro_escola_edit, financeiro_escola_delete
+from .views_relatorios import relatorio_alunos, relatorio_financeiro, relatorio_cobrancas
+from .views_exportacao import exportar_alunos_csv, exportar_financeiro_csv
+from .views_cobrancas import cobrancas_list, cobranca_detail, cobranca_create, cobranca_emitir, configuracao_integracao
+from .views_webhook import webhook_bancario
 
 app_name = 'club'
 
@@ -56,9 +65,43 @@ urlpatterns = [
     path('locacoes/nova/', views.locacao_create, name='locacao_create'),
     path('locacoes/espaco/novo/', views.espaco_create, name='espaco_create'),
     
-    path('escolas/', views.escolas_list, name='escolas_list'),
-    path('escolas/nova/', views.escola_create, name='escola_create'),
+    path('escolas/', escolas_list, name='escolas_list'),
+    path('escolas/nova/', escola_create, name='escola_create'),
+    path('escolas/<int:pk>/editar/', escola_edit, name='escola_edit'),
+    path('escolas/<int:pk>/excluir/', escola_delete, name='escola_delete'),
+    path('escolas/<int:escola_pk>/alunos/', alunos_escola_list, name='alunos_escola_list'),
+    path('escolas/<int:escola_pk>/alunos/novo/', aluno_escola_create, name='aluno_escola_create'),
+    path('escolas/<int:escola_pk>/alunos/<int:pk>/editar/', aluno_escola_edit, name='aluno_escola_edit'),
+    path('escolas/<int:escola_pk>/alunos/<int:pk>/excluir/', aluno_escola_delete, name='aluno_escola_delete'),
     
     path('dayuse/', views.dayuse_list, name='dayuse_list'),
     path('dayuse/novo/', views.dayuse_create, name='dayuse_create'),
+    
+    path('esportes/', esportes_list, name='esportes_list'),
+    path('esportes/novo/', esporte_create, name='esporte_create'),
+    path('esportes/<int:pk>/editar/', esporte_edit, name='esporte_edit'),
+    path('esportes/<int:pk>/excluir/', esporte_delete, name='esporte_delete'),
+    
+    path('alunos/<int:aluno_pk>/horarios/', horarios_aluno_list, name='horarios_aluno_list'),
+    path('alunos/<int:aluno_pk>/horarios/novo/', horario_create, name='horario_create'),
+    path('alunos/<int:aluno_pk>/horarios/<int:pk>/editar/', horario_edit, name='horario_edit'),
+    path('alunos/<int:aluno_pk>/horarios/<int:pk>/excluir/', horario_delete, name='horario_delete'),
+    
+    path('escolas/<int:escola_pk>/financeiro/', financeiro_escola_list, name='financeiro_escola_list'),
+    path('escolas/<int:escola_pk>/financeiro/novo/', financeiro_escola_create, name='financeiro_escola_create'),
+    path('escolas/<int:escola_pk>/financeiro/<int:pk>/editar/', financeiro_escola_edit, name='financeiro_escola_edit'),
+    path('escolas/<int:escola_pk>/financeiro/<int:pk>/excluir/', financeiro_escola_delete, name='financeiro_escola_delete'),
+    
+    path('relatorios/alunos/', relatorio_alunos, name='relatorio_alunos'),
+    path('relatorios/financeiro/', relatorio_financeiro, name='relatorio_financeiro'),
+    path('relatorios/alunos/exportar/', exportar_alunos_csv, name='exportar_alunos_csv'),
+    path('relatorios/financeiro/exportar/', exportar_financeiro_csv, name='exportar_financeiro_csv'),
+    
+    path('financeiro/cobrancas/', cobrancas_list, name='cobrancas_list'),
+    path('financeiro/cobrancas/nova/', cobranca_create, name='cobranca_create'),
+    path('financeiro/cobrancas/<int:pk>/', cobranca_detail, name='cobranca_detail'),
+    path('financeiro/cobrancas/<int:pk>/emitir/', cobranca_emitir, name='cobranca_emitir'),
+    path('financeiro/integracao/', configuracao_integracao, name='configuracao_integracao'),
+    path('financeiro/webhook/', webhook_bancario, name='webhook_bancario'),
+    path('financeiro/relatorio-cobrancas/', relatorio_cobrancas, name='relatorio_cobrancas'),
 ]

@@ -6,16 +6,16 @@
       <path d="M7.938 2.016a.13.13 0 0 1 .125 0l6.857 11.856c.06.104-.015.228-.125.228H1.205a.145.145 0 0 1-.125-.228L7.938 2.016zm.823-1.447a1.13 1.13 0 0 0-1.624 0L.28 12.425C-.418 13.566.523 15 1.905 15h12.19c1.382 0 2.323-1.434 1.625-2.575L8.76.57zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1-2.002 0 1 1 0 0 1 2.002 0z"/>
     </svg>
     <div>
-      <strong>Atenção:</strong> Esta ação é irreversível. O cliente e todos os dados relacionados serão excluídos permanentemente.
+      <strong>Atenção:</strong> Esta ação é irreversível. A escola e todos os dados relacionados serão excluídos permanentemente.
     </div>
   </div>
-  <h2>Confirmar exclusão do cliente</h2>
-  <p>Tem certeza que deseja excluir o cliente <strong>{{ cliente.nome_completo }}</strong>?</p>
+  <h2>Confirmar exclusão da escola</h2>
+  <p>Tem certeza que deseja excluir a escola <strong>{{ escola.nome }}</strong>?</p>
   <form method="post">{% csrf_token %}
     <button type="submit" class="btn btn-danger">
       <i class="bi bi-trash"></i> Sim, excluir
     </button>
-    <a href="{% url 'club:socios_list' %}" class="btn btn-secondary">
+    <a href="{% url 'club:escolas_list' %}" class="btn btn-secondary">
       <i class="bi bi-x-circle"></i> Cancelar
     </a>
   </form>

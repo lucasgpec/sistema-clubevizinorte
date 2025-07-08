@@ -1,0 +1,37 @@
+{% extends 'club/base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Financeiro da Escola: {{ escola.nome }}</h2>
+  <a href="{% url 'club:financeiro_escola_create' escola.pk %}" class="btn btn-success mb-3">Novo Pagamento</a>
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Aluno</th>
+        <th>Esporte</th>
+        <th>Valor Pago</th>
+        <th>Data Pagamento</th>
+        <th>Observação</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pagamento in pagamentos %}
+      <tr>
+        <td>{{ pagamento.aluno.nome }}</td>
+        <td>{{ pagamento.esporte.nome }}</td>
+        <td>R$ {{ pagamento.valor_pago }}</td>
+        <td>{{ pagamento.data_pagamento }}</td>
+        <td>{{ pagamento.observacao }}</td>
+        <td>
+          <a href="{% url 'club:financeiro_escola_edit' escola.pk pagamento.pk %}" class="btn btn-primary btn-sm">Editar</a>
+          <a href="{% url 'club:financeiro_escola_delete' escola.pk pagamento.pk %}" class="btn btn-danger btn-sm">Excluir</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6">Nenhum pagamento registrado.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="{% url 'club:escolas_list' %}" class="btn btn-secondary">Voltar para Escolas</a>
+</div>
+{% endblock %}

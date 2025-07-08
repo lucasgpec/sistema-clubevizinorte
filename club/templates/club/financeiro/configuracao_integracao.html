@@ -1,0 +1,42 @@
+{% extends 'club/base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Configuração de Integração Financeira</h2>
+  <form method="post">{% csrf_token %}
+    <div class="mb-3">
+      <label class="form-label">Banco</label>
+      <select name="banco" class="form-select">
+        <option value="GERENCIANET" {% if config.banco == 'GERENCIANET' %}selected{% endif %}>Gerencianet</option>
+        <option value="ASAAS" {% if config.banco == 'ASAAS' %}selected{% endif %}>Asaas</option>
+        <option value="OUTRO" {% if config.banco == 'OUTRO' %}selected{% endif %}>Outro</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Client ID</label>
+      <input type="text" name="client_id" class="form-control" value="{{ config.client_id }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Client Secret</label>
+      <input type="text" name="client_secret" class="form-control" value="{{ config.client_secret }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Webhook URL</label>
+      <input type="url" name="webhook_url" class="form-control" value="{{ config.webhook_url }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Ambiente</label>
+      <select name="ambiente" class="form-select">
+        <option value="PRODUCAO" {% if config.ambiente == 'PRODUCAO' %}selected{% endif %}>Produção</option>
+        <option value="HOMOLOGACAO" {% if config.ambiente == 'HOMOLOGACAO' %}selected{% endif %}>Homologação</option>
+      </select>
+    </div>
+    <div class="form-check mb-3">
+      <input class="form-check-input" type="checkbox" name="ativo" value="True" id="ativoCheck" {% if config.ativo %}checked{% endif %}>
+      <label class="form-check-label" for="ativoCheck">Ativo</label>
+    </div>
+    <button type="submit" class="btn btn-success">
+      <i class="bi bi-save"></i> Salvar
+    </button>
+  </form>
+</div>
+{% endblock %}

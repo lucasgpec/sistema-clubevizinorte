@@ -1,0 +1,56 @@
+{% extends 'club/base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Relatório Financeiro das Escolas</h2>
+  <a href="{% url 'exportar_financeiro_csv' %}" class="btn btn-outline-success mb-3">Exportar CSV</a>
+  <form method="get" class="row g-3 mb-3">
+    <div class="col-md-4">
+      <label>Escola</label>
+      <select name="escola" class="form-control">
+        <option value="">Todas</option>
+        {% for escola in escolas %}
+        <option value="{{ escola.pk }}" {% if escola_selected == escola.pk|stringformat:'s' %}selected{% endif %}>{{ escola.nome }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label>Esporte</label>
+      <select name="esporte" class="form-control">
+        <option value="">Todos</option>
+        {% for esporte in esportes %}
+        <option value="{{ esporte.pk }}" {% if esporte_selected == esporte.pk|stringformat:'s' %}selected{% endif %}>{{ esporte.nome }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
+      <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+    </div>
+  </form>
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Escola</th>
+        <th>Aluno</th>
+        <th>Esporte</th>
+        <th>Valor Pago</th>
+        <th>Data Pagamento</th>
+        <th>Observação</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pagamento in pagamentos %}
+      <tr>
+        <td>{{ pagamento.escola.nome }}</td>
+        <td>{{ pagamento.aluno.nome }}</td>
+        <td>{{ pagamento.esporte.nome }}</td>
+        <td>R$ {{ pagamento.valor_pago }}</td>
+        <td>{{ pagamento.data_pagamento }}</td>
+        <td>{{ pagamento.observacao }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6">Nenhum pagamento encontrado.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

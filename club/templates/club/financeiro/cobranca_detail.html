@@ -1,0 +1,20 @@
+{% extends 'club/base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Detalhe da Cobrança #{{ cobranca.id }}</h2>
+  <div class="card mb-3">
+    <div class="card-body">
+      <h5 class="card-title">Aluno: {{ cobranca.aluno.nome }}</h5>
+      <p class="card-text"><strong>Valor:</strong> R$ {{ cobranca.valor|floatformat:2 }}</p>
+      <p class="card-text"><strong>Vencimento:</strong> {{ cobranca.vencimento|date:'d/m/Y' }}</p>
+      <p class="card-text"><strong>Status:</strong> <span class="badge bg-{% if cobranca.status == 'PAGO' %}success{% elif cobranca.status == 'PENDENTE' %}warning{% else %}secondary{% endif %}">{{ cobranca.get_status_display }}</span></p>
+      <p class="card-text"><strong>Linha Digitável:</strong> {{ cobranca.linha_digitavel|default:'-' }}</p>
+      <p class="card-text"><strong>Código de Barras:</strong> {{ cobranca.codigo_barras|default:'-' }}</p>
+      <p class="card-text"><strong>Nosso Número:</strong> {{ cobranca.nosso_numero|default:'-' }}</p>
+      <p class="card-text"><strong>Observação:</strong> {{ cobranca.observacao|default:'-' }}</p>
+      <p class="card-text"><strong>Retorno Banco:</strong> {{ cobranca.retorno_banco|default:'-' }}</p>
+      <a href="{% url 'club:cobrancas_list' %}" class="btn btn-secondary mt-2"><i class="bi bi-arrow-left"></i> Voltar</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
