@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-zhv*=h@gokr06g)w4%y)57be5xm*6!-^o9$13c6c&h7253kr5!
 DEBUG = False
 
 ALLOWED_HOSTS = ['sistema-clubevizinorte.onrender.com', 'localhost', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://sistema-clubevizinorte.onrender.com']
 
 
 # Application definition
