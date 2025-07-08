@@ -10,7 +10,8 @@ from .views_alunos_escola import alunos_escola_list, aluno_escola_create, aluno_
 from .views_esportes import esportes_list, esporte_create, esporte_edit, esporte_delete
 from .views_horarios_esporte import horarios_aluno_list, horario_create, horario_edit, horario_delete
 from .views_financeiro_escola import financeiro_escola_list, financeiro_escola_create, financeiro_escola_edit, financeiro_escola_delete
-from .views_relatorios import relatorio_alunos, relatorio_financeiro, relatorio_cobrancas
+from .views_relatorios import relatorio_alunos, relatorio_financeiro
+from .views_cobrancas import relatorio_cobrancas
 from .views_exportacao import exportar_alunos_csv, exportar_financeiro_csv
 from .views_cobrancas import cobrancas_list, cobranca_detail, cobranca_create, cobranca_emitir, configuracao_integracao
 from .views_webhook import webhook_bancario

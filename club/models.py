@@ -690,6 +690,8 @@ class MensalidadeLocacao(models.Model):
 class Esporte(models.Model):
     nome = models.CharField(max_length=100)
     descricao = models.TextField(blank=True)
+    tipo = models.CharField(max_length=50, blank=True)  # Adicionado campo tipo
+    logo = models.ImageField(upload_to='esportes_logos/', blank=True, null=True)  # Adicionado campo logo
     def __str__(self):
         return self.nome
     class Meta:
