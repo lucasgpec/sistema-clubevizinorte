@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Excluir Lançamento Financeiro</h2>
+    <p>Tem certeza que deseja excluir o lançamento de <strong>R$ {{ object.valor }}</strong> em <strong>{{ object.data|date:'d/m/Y' }}</strong>?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Confirmar</button>
+        <a href="{% url 'lancamentofinanceiro_list' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

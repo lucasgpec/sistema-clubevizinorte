@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from .views_admin import create_emergency_admin
 from .views_debug import debug_users, fix_user
@@ -15,6 +15,12 @@ from .views_cobrancas import relatorio_cobrancas
 from .views_exportacao import exportar_alunos_csv, exportar_financeiro_csv
 from .views_cobrancas import cobrancas_list, cobranca_detail, cobranca_create, cobranca_emitir, configuracao_integracao
 from .views_webhook import webhook_bancario
+from club.dashboards.associados import AssociadosDashboardView
+from club.dashboards.locacoes import LocacoesDashboardView
+from club.dashboards.dayuse import DayUseDashboardView
+from club.dashboards.financeiro import FinanceiroDashboardView
+from club.dashboards.relatoriofinanceiro import RelatorioFinanceiroView
+from club.dashboards.conciliacao import ConciliacaoBancariaView
 
 app_name = 'club'
 
@@ -42,12 +48,13 @@ urlpatterns = [
     
     # Dashboard principal
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('dashboard/associados/', AssociadosDashboardView.as_view(), name='dashboard_associados'),
+    path('dashboard/locacoes/', LocacoesDashboardView.as_view(), name='dashboard_locacoes'),
+    path('dashboard/dayuse/', DayUseDashboardView.as_view(), name='dashboard_dayuse'),
+    path('dashboard/financeiro/', FinanceiroDashboardView.as_view(), name='dashboard_financeiro'),
     
     # Gestão de usuários (apenas para gestora)
-    path('usuarios/', views.usuarios_list, name='usuarios_list'),
-    path('usuarios/novo/', views.usuario_create, name='usuario_create'),
-    path('usuarios/<int:pk>/editar/', views.usuario_edit, name='usuario_edit'),
-    path('usuarios/<int:pk>/toggle/', views.usuario_toggle, name='usuario_toggle'),
+    path('usuarios/', include('club.users.urls', namespace='users')),
     
     # Módulos do sistema
     path('socios/', views.socios_list, name='socios_list'),
@@ -105,4 +112,9 @@ urlpatterns = [
     path('financeiro/integracao/', configuracao_integracao, name='configuracao_integracao'),
     path('financeiro/webhook/', webhook_bancario, name='webhook_bancario'),
     path('financeiro/relatorio-cobrancas/', relatorio_cobrancas, name='relatorio_cobrancas'),
+    path('financeiro/relatorio/', RelatorioFinanceiroView.as_view(), name='relatorio_financeiro'),
+    path('financeiro/conciliacao/', ConciliacaoBancariaView.as_view(), name='conciliacao_bancaria'),
+    
+    # Rotas do módulo financeiro
+    path('financeiro/', include('club.users.finance_urls')),
 ]

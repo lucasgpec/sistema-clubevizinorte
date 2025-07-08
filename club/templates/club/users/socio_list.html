@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Sócios</h2>
+        <a href="{% url 'socio_create' %}" class="btn btn-primary">Novo Sócio</a>
+    </div>
+    <form method="get" class="mb-3">
+        <input type="text" name="q" placeholder="Buscar por nome ou CPF" class="form-control" value="{{ request.GET.q }}">
+    </form>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>CPF</th>
+                    <th>Status</th>
+                    <th>Data de Criação</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for socio in object_list %}
+                <tr>
+                    <td>{{ socio.id }}</td>
+                    <td>{{ socio.nome }}</td>
+                    <td>{{ socio.cpf }}</td>
+                    <td>{{ socio.status }}</td>
+                    <td>{{ socio.cliente.data_criacao|date:'d/m/Y' }}</td>
+                    <td>
+                        <a href="{% url 'socio_update' socio.id %}" class="btn btn-sm btn-warning">Editar</a>
+                        <a href="{% url 'socio_delete' socio.id %}" class="btn btn-sm btn-danger">Excluir</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6">Nenhum sócio encontrado.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% if is_paginated %}
+    <nav>
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a></li>
+            {% endif %}
+            <li class="page-item disabled"><span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li>
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Próxima</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

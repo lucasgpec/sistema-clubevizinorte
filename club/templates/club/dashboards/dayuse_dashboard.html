@@ -1,0 +1,89 @@
+{% extends 'club/base.html' %}
+{% block title %}Dashboard Day-Use{% endblock %}
+{% block content %}
+<div class="container-fluid mt-4">
+  <h2 class="mb-4"><i class="bi bi-sun"></i> Dashboard Day-Use</h2>
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Utilização Mensal</h5>
+          <canvas id="usoMensalChart"></canvas>
+        </div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Receita de Day-Use (últimos 6 meses)</h5>
+          <canvas id="receitaMensalChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Picos de Utilização (Mês Atual)</h5>
+          <ul class="list-group">
+            {% for pico in picos %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              {{ pico.dia }}
+              <span class="badge bg-primary rounded-pill">{{ pico.qtd }}</span>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Clientes Recorrentes</h5>
+          <ol class="list-group list-group-numbered">
+            {% for rec in recorrentes %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              {{ rec.cliente__nome_completo }}
+              <span class="badge bg-success rounded-pill">{{ rec.freq }}</span>
+            </li>
+            {% endfor %}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% load static %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const meses = JSON.parse(document.getElementById('meses-data').textContent);
+const usoMensal = JSON.parse(document.getElementById('uso-mensal-data').textContent);
+const receitaMensal = JSON.parse(document.getElementById('receita-mensal-data').textContent);
+const ctx1 = document.getElementById('usoMensalChart').getContext('2d');
+new Chart(ctx1, {
+  type: 'bar',
+  data: {
+    labels: meses,
+    datasets: [{
+      label: 'Utilizações',
+      data: usoMensal,
+      backgroundColor: '#007bff'
+    }]
+  },
+  options: {responsive: true}
+});
+const ctx2 = document.getElementById('receitaMensalChart').getContext('2d');
+new Chart(ctx2, {
+  type: 'line',
+  data: {
+    labels: meses,
+    datasets: [{
+      label: 'Receita (R$)',
+      data: receitaMensal,
+      borderColor: '#28a745',
+      backgroundColor: 'rgba(40,167,69,0.2)',
+      fill: true
+    }]
+  },
+  options: {responsive: true}
+});
+</script>
+{{ meses|json_script:'meses-data' }}
+{{ uso_mensal|json_script:'uso-mensal-data' }}
+{{ receita_mensal|json_script:'receita-mensal-data' }}
+{% endblock %}

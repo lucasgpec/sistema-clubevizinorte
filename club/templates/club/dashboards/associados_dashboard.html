@@ -1,0 +1,109 @@
+{% extends 'club/base.html' %}
+{% block title %}Dashboard Associados{% endblock %}
+{% block content %}
+<div class="container-fluid mt-4">
+  <h2 class="mb-4"><i class="bi bi-people"></i> Dashboard Associados</h2>
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card text-bg-primary mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Sócios Ativos</h5>
+          <p class="display-6">{{ socios_ativos }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-bg-secondary mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Sócios Inativos</h5>
+          <p class="display-6">{{ socios_inativos }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-bg-success mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Mensalidades Pagas</h5>
+          <p class="display-6">{{ mensalidades_pagas }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-bg-warning mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Mensalidades Pendentes</h5>
+          <p class="display-6">{{ mensalidades_pendentes }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card border-info mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Total de Associados</h5>
+          <p class="display-4">{{ total_socios }}</p>
+        </div>
+      </div>
+      <div class="card border-danger mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Inadimplência (%)</h5>
+          <p class="display-6">{{ inadimplencia }}%</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Mensalidades Pagas x Pendentes (últimos 6 meses)</h5>
+          <canvas id="mensalidadesChart"></canvas>
+        </div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Evolução Mensal de Associações</h5>
+          <canvas id="evolucaoChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx1 = document.getElementById('mensalidadesChart').getContext('2d');
+new Chart(ctx1, {
+  type: 'bar',
+  data: {
+    labels: {{ grafico_meses|safe }},
+    datasets: [
+      {
+        label: 'Pagas',
+        data: {{ grafico_pagas|safe }},
+        backgroundColor: 'rgba(40, 167, 69, 0.7)'
+      },
+      {
+        label: 'Pendentes',
+        data: {{ grafico_pendentes|safe }},
+        backgroundColor: 'rgba(255, 193, 7, 0.7)'
+      }
+    ]
+  },
+  options: {responsive: true}
+});
+const ctx2 = document.getElementById('evolucaoChart').getContext('2d');
+new Chart(ctx2, {
+  type: 'line',
+  data: {
+    labels: {{ grafico_meses|safe }},
+    datasets: [{
+      label: 'Novos Sócios',
+      data: {{ grafico_evolucao|safe }},
+      borderColor: 'rgba(23, 162, 184, 1)',
+      backgroundColor: 'rgba(23, 162, 184, 0.2)',
+      fill: true
+    }]
+  },
+  options: {responsive: true}
+});
+</script>
+{% endblock %}

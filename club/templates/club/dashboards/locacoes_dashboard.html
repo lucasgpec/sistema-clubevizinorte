@@ -1,0 +1,76 @@
+{% extends 'club/base.html' %}
+{% block title %}Dashboard Locações{% endblock %}
+{% block content %}
+<div class="container-fluid mt-4">
+  <h2 class="mb-4"><i class="bi bi-calendar-check"></i> Dashboard Locações</h2>
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Locações Mensais por Espaço</h5>
+          <canvas id="locacoesEspacoChart"></canvas>
+        </div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Receita de Locações (últimos 6 meses)</h5>
+          <canvas id="receitaChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Ocupação dos Espaços (Mês Atual)</h5>
+          <ul class="list-group">
+            {% for espaco, dias in ocupacao.items %}
+            <li class="list-group-item">
+              <strong>{{ espaco }}:</strong> {{ dias|join:', ' }}
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% load static %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const meses = JSON.parse(document.getElementById('meses-data').textContent);
+const locacoesPorEspaco = JSON.parse(document.getElementById('locacoes-espaco-data').textContent);
+const receita = JSON.parse(document.getElementById('receita-data').textContent);
+const ctx1 = document.getElementById('locacoesEspacoChart').getContext('2d');
+const datasets = Object.keys(locacoesPorEspaco).map((espaco, idx) => ({
+  label: espaco,
+  data: locacoesPorEspaco[espaco],
+  backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545', '#17a2b8', '#6f42c1', '#fd7e14', '#20c997'][idx % 8]
+}));
+new Chart(ctx1, {
+  type: 'bar',
+  data: {
+    labels: meses,
+    datasets: datasets
+  },
+  options: {responsive: true, scales: {x: {stacked: true}, y: {stacked: true}}}
+});
+const ctx2 = document.getElementById('receitaChart').getContext('2d');
+new Chart(ctx2, {
+  type: 'line',
+  data: {
+    labels: meses,
+    datasets: [{
+      label: 'Receita (R$)',
+      data: receita,
+      borderColor: '#28a745',
+      backgroundColor: 'rgba(40,167,69,0.2)',
+      fill: true
+    }]
+  },
+  options: {responsive: true}
+});
+</script>
+{{ meses|json_script:'meses-data' }}
+{{ locacoes_por_espaco|json_script:'locacoes-espaco-data' }}
+{{ receita|json_script:'receita-data' }}
+{% endblock %}

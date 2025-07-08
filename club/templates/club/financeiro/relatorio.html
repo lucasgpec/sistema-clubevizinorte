@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Relatório Financeiro</h2>
+    <form method="get" class="form-inline mb-3">
+        <label for="mes" class="mr-2">Mês:</label>
+        <select name="mes" id="mes" class="form-control mr-2">
+            <option value="">Todos</option>
+            {% for m in 1|to_list:12 %}
+            <option value="{{ m }}" {% if mes|default:'' == m|stringformat:'d' %}selected{% endif %}>{{ m|stringformat:'02d' }}</option>
+            {% endfor %}
+        </select>
+        <label for="ano" class="mr-2">Ano:</label>
+        <input type="number" name="ano" id="ano" class="form-control mr-2" value="{{ ano|default:'' }}" min="2020" max="2100">
+        <button type="submit" class="btn btn-primary mr-2">Filtrar</button>
+        <button type="submit" name="export" value="csv" class="btn btn-success">Exportar CSV</button>
+    </form>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Categoria</th>
+                    <th>Conta</th>
+                    <th>Valor</th>
+                    <th>Tipo</th>
+                    <th>Conciliado</th>
+                    <th>Descrição</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for l in lancamentos %}
+                <tr>
+                    <td>{{ l.data|date:'d/m/Y' }}</td>
+                    <td>{{ l.categoria.nome }}</td>
+                    <td>{{ l.conta }}</td>
+                    <td>R$ {{ l.valor|floatformat:2 }}</td>
+                    <td>{{ l.categoria.get_tipo_display }}</td>
+                    <td>{{ l.conciliado|yesno:"Sim,Não" }}</td>
+                    <td>{{ l.descricao }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7">Nenhum lançamento encontrado.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

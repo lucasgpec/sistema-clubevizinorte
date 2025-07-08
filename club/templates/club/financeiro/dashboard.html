@@ -108,5 +108,51 @@
             </div>
         </div>
     </div>
+
+    <!-- Gráfico de Receitas e Despesas -->
+    <div class="row">
+        <div class="col">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <canvas id="financeiroChart" height="80"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+{{ grafico_meses|json_script:"grafico-meses" }}
+{{ grafico_receitas|json_script:"grafico-receitas" }}
+{{ grafico_despesas|json_script:"grafico-despesas" }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const meses = JSON.parse(document.getElementById('grafico-meses').textContent);
+    const receitas = JSON.parse(document.getElementById('grafico-receitas').textContent);
+    const despesas = JSON.parse(document.getElementById('grafico-despesas').textContent);
+    const ctx = document.getElementById('financeiroChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: meses,
+            datasets: [
+                {
+                    label: 'Receitas',
+                    backgroundColor: 'rgba(40,167,69,0.7)',
+                    data: receitas,
+                },
+                {
+                    label: 'Despesas',
+                    backgroundColor: 'rgba(220,53,69,0.7)',
+                    data: despesas,
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                title: { display: true, text: 'Receitas e Despesas - Últimos 6 meses' }
+            }
+        }
+    });
+</script>
 {% endblock %}

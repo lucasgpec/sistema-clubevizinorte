@@ -259,20 +259,25 @@ def locacao_create(request):
     if not request.user.pode_gerenciar_locacoes and request.user.tipo_usuario != 'GESTORA':
         messages.error(request, 'Acesso negado.')
         return redirect('club:dashboard')
-    
+    error_message = None
     if request.method == 'POST':
         form = LocacaoForm(request.POST)
         if form.is_valid():
-            locacao = form.save()
-            messages.success(request, f'Locação criada com sucesso para {locacao.data_agendamento.strftime("%d/%m/%Y")}!')
-            return redirect('club:locacoes_list')
+            try:
+                locacao = form.save()
+                messages.success(request, f'Locação criada com sucesso para {locacao.data_agendamento.strftime("%d/%m/%Y")}!')
+                return redirect('club:locacoes_list')
+            except Exception as e:
+                error_message = f'Erro ao salvar locação: {str(e)}'
+        else:
+            error_message = 'Por favor, corrija os erros do formulário.'
     else:
         form = LocacaoForm()
-    
     return render(request, 'club/locacoes/form.html', {
-        'form': form, 
+        'form': form,
         'title': 'Nova Locação',
-        'subtitle': 'Reserve um espaço do clube'
+        'subtitle': 'Reserve um espaço do clube',
+        'error_message': error_message
     })
 
 
@@ -352,24 +357,31 @@ def dayuse_create(request):
     if not request.user.pode_gerenciar_dayuse and request.user.tipo_usuario != 'GESTORA':
         messages.error(request, 'Acesso negado.')
         return redirect('club:dashboard')
-    
+    error_message = None
     if request.method == 'POST':
         form = DayUseForm(request.POST)
         if form.is_valid():
-            dayuse = form.save()
-            messages.success(request, f'Day Use criado com sucesso para {dayuse.cliente.nome_completo}!')
-            return redirect('club:dayuse_list')
+            try:
+                dayuse = form.save()
+                messages.success(request, f'Day Use criado com sucesso para {dayuse.cliente.nome_completo}!')
+                return redirect('club:dayuse_list')
+            except Exception as e:
+                error_message = f'Erro ao salvar Day Use: {str(e)}'
+        else:
+            error_message = 'Por favor, corrija os erros do formulário.'
     else:
         form = DayUseForm()
         # Define valor padrão do day use
         config = ConfiguracaoFinanceira.objects.filter(ativa=True).first()
         if config:
             form.initial['valor'] = config.valor_day_use
-    
+        else:
+            error_message = 'Configuração financeira não encontrada. Cadastre uma configuração ativa no menu Financeiro.'
     return render(request, 'club/dayuse/form.html', {
-        'form': form, 
+        'form': form,
         'title': 'Novo Day Use',
-        'subtitle': 'Registre um visitante de day use'
+        'subtitle': 'Registre um visitante de day use',
+        'error_message': error_message
     })
 
 
